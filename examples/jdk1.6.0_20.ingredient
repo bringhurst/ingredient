@@ -1,0 +1,66 @@
+##
+## An ingredient file.
+##
+
+ingredient_name = 'jdk1.6.0_20'
+ingredient_description = "java for use on service nodes"
+
+add {
+  @java_level = 'jdk1.6.0_20'
+  @java_curpath = '/opt/java/' java_level
+
+  ingredient_prepend_path :PATH, java_curpath '/bin'
+  ingredient_prepend_path :MANPATH, java_curpath '/man'
+
+  ENV['JAVA_PATH'] = java_curpath
+  ENV['JAVA_VERSION'] = java_level
+}
+
+remove {
+  # remove it from the environment
+}
+
+# Tasting an ingredient is a simple sanity check for every time it's added.
+taste {
+  # Do a simple test to make sure java returns the correct version.
+  test_version_java do
+    IO.popen("java -version") do |f|
+      while line = f.gets do
+        assert_true line.include? '1.6.0_20-b02' or line.include? '16.3-b01'
+      end
+    end
+  end
+
+  # Do a simple test to make sure javac returns the correct version number
+  test_version_javac do
+    assert_true IO.popen("javac -version").gets.include? 'javac 1.6.0_20'
+  end
+}
+
+# Noming an ingredient is an extended test meant for regression testing.
+nom {
+  test_compile_program do
+    require 'tmpdir'
+
+    random_name = ''
+    for i in 1..10 do random_name << (65 + rand(26)) end
+
+    src_filename = File.join(Dir.tmpdir, random_name '.java')
+    class_filename = File.join(Dir.tmpdir, random_name '.class')
+
+    program = %(
+      class #{random_name} {
+          public static void main( String args[] ) {
+              System.out.println("#{random_name}");
+          }
+      }
+    )
+
+    File.open(src_filename, 'w') {|f| f.write(program) }
+    IO.popen("javac #{src_filename}");
+
+    assert_true File.exist? class_filename
+  end
+}
+
+## EOF
