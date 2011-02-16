@@ -2,10 +2,11 @@
 ## An ingredient file.
 ##
 
-ingredient_name = 'jdk1.6.0_20'
-ingredient_description = "java for use on service nodes"
+describe 'jdk1.6.0_20' do
+  "java for use on service nodes"
+end
 
-add {
+add 'jdk1.6.0_20' do
   @java_level = 'jdk1.6.0_20'
   @java_curpath = '/opt/java/' java_level
 
@@ -14,14 +15,14 @@ add {
 
   ENV['JAVA_PATH'] = java_curpath
   ENV['JAVA_VERSION'] = java_level
-}
+end
 
-remove {
+remove 'jdk1.6.0_20' do
   # remove it from the environment
-}
+end
 
 # Tasting an ingredient is a simple sanity check for every time it's added.
-taste {
+taste 'jdk1.6.0_20' do
   # Do a simple test to make sure java returns the correct version.
   test_version_java do
     IO.popen("java -version") do |f|
@@ -35,10 +36,10 @@ taste {
   test_version_javac do
     assert_true IO.popen("javac -version").gets.include? 'javac 1.6.0_20'
   end
-}
+end
 
 # Noming an ingredient is an extended test meant for regression testing.
-nom {
+nom 'jdk1.6.0_20' do
   test_compile_program do
     require 'tmpdir'
 
@@ -61,6 +62,6 @@ nom {
 
     assert_true File.exist? class_filename
   end
-}
+end
 
 ## EOF
