@@ -8,6 +8,7 @@ rescue LoadError
 end
 
 require 'yaml'
+require 'ingredient/version'
 
 module Ingredient
   ORIGINAL_ENV = ENV.to_hash
