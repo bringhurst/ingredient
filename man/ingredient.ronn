@@ -26,10 +26,10 @@ We divide `ingredient` subcommands into testing and environment configuration.
 
 ## ENVIRONMENT CONFIGURATION
 
-* [ingredient avail(1)][ingredient-avail]:
+* `ingredient avail(1)`:
   Display a list of the ingredients available for loading.
 
-* [ingredient load(1)][ingredient-load]:
+* `ingredient load(1)`:
   Load the specified ingredient into the current environment.
 
 ## TESTING
