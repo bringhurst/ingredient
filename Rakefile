@@ -126,9 +126,9 @@ namespace :man do
 
   Dir["man/*.ronn"].each do |ronn|
     basename = File.basename(ronn, ".ronn")
-    roff = "lib/bundler/man/#{basename}"
+    roff = "lib/ingredient/man/#{basename}"
 
-    file roff => ["lib/bundler/man", ronn] do
+    file roff => ["lib/ingredient/man", ronn] do
       sh "ronn --roff --pipe #{ronn} > #{roff}"
     end
 
@@ -144,21 +144,21 @@ namespace :man do
 
   desc "Clean up from the built man pages"
   task :clean do
-    rm_rf "lib/bundler/man"
+    rm_rf "lib/ingredient/man"
   end
 end
 
 namespace :vendor do
   desc "Build the vendor dir"
   task :build => :clean do
-    sh "git clone git://github.com/wycats/thor.git lib/bundler/vendor/tmp"
-    sh "mv lib/bundler/vendor/tmp/lib/* lib/bundler/vendor/"
-    rm_rf "lib/bundler/vendor/tmp"
+    sh "git clone git://github.com/wycats/thor.git lib/ingredient/vendor/tmp"
+    sh "mv lib/ingredient/vendor/tmp/lib/* lib/ingredient/vendor/"
+    rm_rf "lib/ingredient/vendor/tmp"
   end
 
   desc "Clean the vendor dir"
   task :clean do
-    rm_rf "lib/bundler/vendor"
+    rm_rf "lib/ingredient/vendor"
   end
 end
 
