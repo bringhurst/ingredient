@@ -10,8 +10,7 @@ ingredient(1) -- Environment configuration and testing
 Ingredient is a utility to manage a user's environment and to ensure
 that the environment performs correctly.
 
-See the ingredient documentation for information on getting started, and
-ingredient(5) for more information on the ingredient file format.
+See the ingredient documentation for information on getting started, and ingredient(5) for more information on the ingredient file format and domain specific language syntax.
 
 ## OPTIONS
 
@@ -31,7 +30,7 @@ We divide `ingredient` subcommands into testing and environment configuration.
   Display a list of the ingredients available for loading.
 
 * [ingredient load(1)][ingredient-load]:
-  Load an ingredient into the current environment.
+  Load the specified ingredient into the current environment.
 
 ## TESTING
 
@@ -39,8 +38,8 @@ We divide `ingredient` subcommands into testing and environment configuration.
   Execute all simple sanity tests for the specified ingredient.
 
 * `ingredient nom(1)`:
-  Execute all complex and time consuming tests for the specified ingredient.
+  Execute all complex and time consuming tests for the specified ingredient. This command may require super-user privledges and is not recommended for normal users.
 
 * `ingredient mix(1)`:
-  Execute all complex and simple tests for all ingredients available.
+  Execute all complex and simple tests for all ingredients available. This command may require super-user priviledges and is not recommended for normal users. This command may take a VERY long time to finish.
 
