@@ -1,0 +1,46 @@
+ingredient(1) -- Environment configuration and testing
+======================================================
+
+## SYNOPSIS
+
+`ingredient` COMMAND [--no-color] [--verbose] [ARGS]
+
+## DESCRIPTION
+
+Ingredient is a utility to manage a user's environment and to ensure
+that the environment performs correctly.
+
+See the ingredient documentation for information on getting started, and
+ingredient(5) for more information on the ingredient file format.
+
+## OPTIONS
+
+* `--no-color`:
+  Prints all output without color
+
+* `--verbose`:
+  Prints out additional logging information
+
+## INGREDIENT COMMANDS
+
+We divide `ingredient` subcommands into testing and environment configuration.
+
+## ENVIRONMENT CONFIGURATION
+
+* [ingredient avail(1)][ingredient-avail]:
+  Display a list of the ingredients available for loading.
+
+* [ingredient load(1)][ingredient-load]:
+  Load an ingredient into the current environment.
+
+## TESTING
+
+* `ingredient taste(1)`:
+  Execute all simple sanity tests for the specified ingredient.
+
+* `ingredient nom(1)`:
+  Execute all complex and time consuming tests for the specified ingredient.
+
+* `ingredient mix(1)`:
+  Execute all complex and simple tests for all ingredients available.
+
