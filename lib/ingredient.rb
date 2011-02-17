@@ -12,7 +12,7 @@ require 'yaml'
 module Ingredient
   ORIGINAL_ENV = ENV.to_hash
 
-  #autoload :UI,                  'bundler/ui'
+  autoload :UI,                  'ingredient/ui'
 
   class IngredientError < StandardError
     def self.status_code(code = nil)
@@ -20,13 +20,12 @@ module Ingredient
     end
   end
 
-  class PathError        < BundlerError; status_code(13) ; end
-  class DeprecatedError  < BundlerError; status_code(12) ; end
-  class DslError         < BundlerError; status_code(15) ; end
+  class PathError        < IngredientError; status_code(13) ; end
+  class DeprecatedError  < IngredientError; status_code(12) ; end
+  class DslError         < IngredientError; status_code(15) ; end
   class InvalidOption    < DslError                      ; end
 
-  FREEBSD = RbConfig::CONFIG["host_os"] =~ /bsd/
-  NULL    = WINDOWS ? "NUL" : "/dev/null"
+  NULL = "/dev/null"
 
   class << self
     attr_writer :ui, :ingredient_path
@@ -129,6 +128,33 @@ module Ingredient
 
     def read_file(file)
       File.open(file, "rb") { |f| f.read }
+    end
+
+    def load_gemspec(file)
+      path = Pathname.new(file)
+      # Eval the gemspec from its parent directory
+      Dir.chdir(path.dirname.to_s) do
+        contents = File.read(path.basename.to_s)
+        begin
+          Gem::Specification.from_yaml(contents)
+          # Raises ArgumentError if the file is not valid YAML
+        rescue ArgumentError, SyntaxError, Gem::EndOfYAMLException, Gem::Exception
+          begin
+            eval(contents, TOPLEVEL_BINDING, path.expand_path.to_s)
+          rescue LoadError => e
+            original_line = e.backtrace.find { |line| line.include?(path.to_s) }
+            msg  = "There was a LoadError while evaluating #{path.basename}:\n  #{e.message}"
+            msg << " from\n  #{original_line}" if original_line
+            msg << "\n"
+
+            if RUBY_VERSION >= "1.9.0"
+              msg << "\nDoes it try to require a relative path? That doesn't work in Ruby 1.9."
+            end
+
+            raise GemspecError, msg
+          end
+        end
+      end
     end
 
   private

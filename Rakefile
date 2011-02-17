@@ -1,5 +1,7 @@
-# -*- encoding: utf-8 -*-
 $:.unshift File.expand_path("../lib", __FILE__)
+
+require 'ingredient/gem_helper'
+Ingredient::GemHelper.install_tasks
 
 def sudo?
   ENV['INGREDIENT_SUDO_TESTS']
@@ -44,7 +46,7 @@ begin
     task :sudo => ["set_sudo", "clean", "spec"]
 
     task :set_sudo do
-      ENV['BUNDLER_SUDO_TESTS'] = '1'
+      ENV['INGREDIENT_SUDO_TESTS'] = '1'
     end
 
     task :clean do

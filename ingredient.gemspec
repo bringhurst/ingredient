@@ -1,3 +1,6 @@
+lib = File.expand_path('../lib/', __FILE__)
+$:.unshift lib unless $:.include?(lib)
+
 require 'ingredient/version'
 
 Gem::Specification.new do |s|
@@ -16,7 +19,7 @@ Gem::Specification.new do |s|
   s.add_development_dependency "rspec"
 
   # Man files are required because they are ignored by git
-  man_files            = Dir.glob("lib/bundler/man/**/*")
+  man_files            = Dir.glob("lib/ingredient/man/**/*")
   s.files              = `git ls-files`.split("\n") + man_files
   s.test_files         = `git ls-files -- {test,spec,features}/*`.split("\n")
   s.executables        = %w(ingredient)

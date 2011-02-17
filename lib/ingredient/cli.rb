@@ -12,7 +12,7 @@ module Ingredient
       the_shell = (options["no-color"] ? Thor::Shell::Basic.new : shell)
       Ingredient.ui = UI::Shell.new(the_shell)
       Ingredient.ui.debug! if options["verbose"]
-      Gem::DefaultUserInteraction.ui = UI::RGProxy.new(Bundler.ui)
+      Gem::DefaultUserInteraction.ui = UI::RGProxy.new(Ingredient.ui)
     end
 
     check_unknown_options! unless ARGV.include?("exec") || ARGV.include?("config")
@@ -63,7 +63,7 @@ module Ingredient
       "Display the available ingredients in a longer format."
 
     def avail
-        Bundler.ui.error "List available ingredients here"
+        Ingredient.ui.error "List available ingredients here"
         exit 1
     end
 
