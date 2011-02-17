@@ -1,0 +1,15 @@
+#!/usr/bin/env ruby
+
+require 'ingredient/cli'
+
+begin
+  Ingredient::CLI.start
+rescue Ingredient::IngredientError => e
+  Ingredient.ui.error e.message
+  Ingredient.ui.debug e.backtrace.join("\n")
+  exit e.status_code
+rescue Interrupt => e
+  Ingredient.ui.error "\nQuitting..."
+  Ingredient.ui.debug e.backtrace.join("\n")
+  exit 1
+end
