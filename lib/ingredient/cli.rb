@@ -46,43 +46,49 @@ module Ingredient
       end
     end
 
-    desc "avail", "List the ingredients available for loading"
+    desc "avail", "List the ingredients available for adding"
     long_desc <<-D
       Avail will list all of the ingredients available to the current user. Each
       ingredient is listed in the order it has been placed in the ingredients directory
       structure unless options have been specified to display them in a different format.
      
-      Ingredients that are currently loaded will be marked as such.
+      Ingredients that are currently added will be marked as such.
     D
     method_option "short", :type => :boolean, :banner =>
       "Display the available ingredients in a shorter format."
-    method_option "long", :type => :boolean, :banner =>
-      "Display the available ingredients in a longer format."
-    def avail
+    def avail(short = nil)
         Ingredient.ui.error "List available ingredients here"
+
+        if short
+          Ingredient.ui.warn "Print in short format"
+        else
+          Ingredient.ui.warn "Print in normal format"
+        end
+
         exit 1
     end
 
-    desc "load", "Load the specified ingredient"
+    desc "add", "Load the specified ingredient"
     long_desc <<-D
-      Avail will list all of the ingredients available to the current user. Each
-      ingredient is listed in the order it has been placed in the ingredients directory
-      structure unless options have been specified to display them in a different format.
-
-      Ingredients that are currently loaded will be marked as such.
+      Add will process the specified ingredient file and configure the environment.
     D
-    def load
-        Ingredient.ui.error "Load the specified ingredient"
-        exit 1
+    method_option "file", :type => :string, :banner =>
+      "The ingredient file to add to the current configuration."
+    def add(file = nil)
+      Ingredient.ui.error "Adding file with name: " + file
+
+      ingredientfile = Pathname.new(file).expand_path
+
+      unless ingredientfile.file?
+        raise IngredientfileNotFound, "#{ingredientfile} not found"
+      end
+
+      Dsl.evaluate(ingredientfile)
     end
 
     desc "taste", "Taste the specified ingredient"
     long_desc <<-D
-      Avail will list all of the ingredients available to the current user. Each
-      ingredient is listed in the order it has been placed in the ingredients directory
-      structure unless options have been specified to display them in a different format.
-
-      Ingredients that are currently loaded will be marked as such.
+      Taste will run the short tests specified in the ingredient file.
     D
     def taste
         Ingredient.ui.error "Taste the specified ingredient"
@@ -91,11 +97,7 @@ module Ingredient
 
     desc "nom", "Nom the specified ingredient"
     long_desc <<-D
-      Avail will list all of the ingredients available to the current user. Each
-      ingredient is listed in the order it has been placed in the ingredients directory
-      structure unless options have been specified to display them in a different format.
-
-      Ingredients that are currently loaded will be marked as such.
+      Nom will run the long tests specified in the ingredient file.
     D
     def nom
         Ingredient.ui.error "Nom the specified ingredient"
@@ -104,11 +106,7 @@ module Ingredient
 
     desc "mix", "Mix the specified ingredient"
     long_desc <<-D
-      Avail will list all of the ingredients available to the current user. Each
-      ingredient is listed in the order it has been placed in the ingredients directory
-      structure unless options have been specified to display them in a different format.
-
-      Ingredients that are currently loaded will be marked as such.
+      Mix will run all of the tests it can find in every ingredient file it can find.
     D
     def mix
         Ingredient.ui.error "Mix the specified ingredient"

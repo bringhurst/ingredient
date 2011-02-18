@@ -13,6 +13,7 @@ require 'ingredient/version'
 module Ingredient
   ORIGINAL_ENV = ENV.to_hash
 
+  autoload :Dsl,                 'ingredient/dsl'
   autoload :UI,                  'ingredient/ui'
 
   class IngredientError < StandardError

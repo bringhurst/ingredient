@@ -1,9 +1,9 @@
 module Ingredient
   class Dsl
-    def self.evaluate(ingredientfile, lockfile, unlock)
+    def self.evaluate(ingredientfile)
       builder = new
       builder.instance_eval(Ingredient.read_file(ingredientfile.to_s), ingredientfile.to_s, 1)
-      builder.to_definition(lockfile, unlock)
+      #builder.to_definition(lockfile, unlock)
     end
 
     def initialize
