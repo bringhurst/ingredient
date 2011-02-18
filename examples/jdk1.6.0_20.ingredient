@@ -2,10 +2,16 @@
 ## An ingredient file.
 ##
 
+#
+# Give a basic description of the package this ingredient file configures.
+#
 describe 'jdk1.6.0_20' do
   "java for use on service nodes"
 end
 
+#
+# Operations needed to configure this ingredient into the current environment
+#
 add 'jdk1.6.0_20' do
   @java_level = 'jdk1.6.0_20'
   @java_curpath = '/opt/java/' + java_level
@@ -17,11 +23,20 @@ add 'jdk1.6.0_20' do
   ENV['JAVA_VERSION'] = java_level
 end
 
+#####                                        #####
+##### Everything past this line is optional. #####
+#####                                        #####
+
+#
+# Operations needed to remove this ingredient from the current environment.
+#
 remove 'jdk1.6.0_20' do
   # remove it from the environment
 end
 
-# Tasting an ingredient is a simple sanity check for every time it's added.
+#
+# Tasting an ingredient is a simple sanity check to see if the configuration was a success.
+#
 taste 'jdk1.6.0_20' do
   # Do a simple test to make sure java returns the correct version.
   test_version_java do
@@ -38,7 +53,9 @@ taste 'jdk1.6.0_20' do
   end
 end
 
+#
 # Noming an ingredient is an extended test meant for regression testing.
+#
 nom 'jdk1.6.0_20' do
   test_compile_program do
     require 'tmpdir'
