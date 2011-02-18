@@ -27,33 +27,35 @@ module Ingredient
     end
 
     def add(&block)
-      Ingredient.ui.warn "An add was called for: " + @name
+      Ingredient.ui.warn "An add was found in: " + @name
     end
 
     def remove(&block)
-      Ingredient.ui.warn "A remove was called for: " + @name
+      Ingredient.ui.warn "A remove was found in: " + @name
     end
 
-    def taste(&block)
-      Ingredient.ui.warn "A taste was called for: " + @name
+    def method_missing(meth, *args, &block)
+      m = meth.to_s
+      if m =~ /^taste_(.+)$/
+        _handle_test(:taste, $1, &block)
+      elsif m =~ /^nom_(.+)$/
+        _handle_test(:nom, $1, &block)
+      else
+        super # You *must* call super if you don't handle the
+              # method, otherwise you'll mess up Ruby's method
+              # lookup.
+        end
     end
-
-    def nom(&block)
-      Ingredient.ui.warn "A nom was called for: " + @name
-    end
-
-    def mix(&block)
-      Ingredient.ui.warn "A mix was called for: " + @name
-    end
-
-    def env(name)
-      @env, old = name, @env
-      yield
-    ensure
-      @env = old
-    end
-
   private
-  end
+    def _handle_test(type, attrs, &block)
+      Ingredient.ui.warn "A test was found in: " + @name
+      Ingredient.ui.warn "Test type is: " + type.to_s
+      Ingredient.ui.warn "Test name is: " + attrs
 
+      #tc = Test::Unit::TestCase.new
+      #tc.instance_eval block
+
+      #Test::Unit::UI::Console::TestRunner.run(tc)
+    end
+  end
 end

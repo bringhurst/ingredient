@@ -30,55 +30,56 @@ add {
 # Operations needed to remove this ingredient from the current environment.
 #
 remove {
-  # remove it from the environment
+  # Do stuff to remove it from the environment.
 }
 
-#
-# Tasting an ingredient is a simple sanity check to see if the configuration was a success.
-#
-taste {
-  # Do a simple test to make sure java returns the correct version.
-  test_version_java do
-    IO.popen('java -version') do |f|
-      while line = f.gets do
-        assert_true line.include? '1.6.0_20-b02' or line.include? '16.3-b01'
-      end
+##
+## Tasting an ingredient is a simple sanity check to see if the configuration was a success.
+## All tasting begins with "taste_".
+##
+
+# This taste is a simple test to make sure java returns the correct version.
+taste_version_java {
+  IO.popen('java -version') do |f|
+    while line = f.gets do
+      assert_true line.include? '1.6.0_20-b02' or line.include? '16.3-b01'
     end
   end
-
-  # Do a simple test to make sure javac returns the correct version number
-  test_version_javac do
-    assert_true IO.popen('javac -version').gets.include? 'javac 1.6.0_20'
-  end
 }
 
-#
-# Noming an ingredient is an extended test meant for regression testing.
-#
-nom {
-  test_compile_program do
-    require 'tmpdir'
+# This taste is a simple test to make sure javac returns the correct version number
+taste_version_javac {
+  assert_true IO.popen('javac -version').gets.include? 'javac 1.6.0_20'
+}
 
-    random_name = ''
-    for i in 1..10 do random_name << (65 + rand(26)) end
+##
+## Noming an ingredient is an extended test meant for regression testing.
+## All noming begins with "nom_".
+##
 
-    src_filename = File.join(Dir.tmpdir, random_name + '.java')
-    class_filename = File.join(Dir.tmpdir, random_name + '.class')
+# This nom compiles a sample program and verifies that the program output is expected.
+nom_compile_program {
+  require 'tmpdir'
 
-    program = %(
-      class #{random_name} {
-          public static void main( String args[] ) {
-              System.out.println("#{random_name}");
-          }
-      }
-    )
+  random_name = ''
+  for i in 1..10 do random_name << (65 + rand(26)) end
 
-    File.open(src_filename, 'w') {|f| f.write(program) }
-    IO.popen('javac #{src_filename}');
+  src_filename = File.join(Dir.tmpdir, random_name + '.java')
+  class_filename = File.join(Dir.tmpdir, random_name + '.class')
 
-    assert_true File.exist? class_filename
-    assert_equals `java #{Dir.tmpdir}#{random_name}`, random_name
-  end
+  program = %(
+    class #{random_name} {
+        public static void main( String args[] ) {
+            System.out.println("#{random_name}");
+        }
+    }
+  )
+
+  File.open(src_filename, 'w') {|f| f.write(program) }
+  IO.popen('javac #{src_filename}');
+
+  assert_true File.exist? class_filename
+  assert_equals `java #{Dir.tmpdir}#{random_name}`, random_name
 }
 
 ## EOF
