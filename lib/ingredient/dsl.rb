@@ -34,6 +34,10 @@ module Ingredient
       Ingredient.ui.warn "A mix was called"
     end
 
+    def describe(opts = nil)
+      Ingredient.ui.warn "A describe was called"
+    end
+
     def env(name)
       @env, old = name, @env
       yield
