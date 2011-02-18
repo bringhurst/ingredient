@@ -11,31 +11,39 @@ module Ingredient
       @removes         = []
       @tastes          = []
       @noms            = []
+      @name            = nil
+      @desc            = nil
       @env             = nil
     end
 
-    def add(opts = nil)
-      Ingredient.ui.warn "An add was called"
+    def name(name)
+      @name = name
+      Ingredient.ui.warn "This ingredient has been named: " + @name
     end
 
-    def remove(opts = nil)
-      Ingredient.ui.warn "A remove was called"
+    def description(desc)
+      @desc = desc
+      Ingredient.ui.warn "This ingredient has been described as: " + @desc
     end
 
-    def taste(opts = nil)
-      Ingredient.ui.warn "A taste was called"
+    def add(&block)
+      Ingredient.ui.warn "An add was called for: " + @name
     end
 
-    def nom(opts = nil)
-      Ingredient.ui.warn "A nom was called"
+    def remove(&block)
+      Ingredient.ui.warn "A remove was called for: " + @name
     end
 
-    def mix(opts = nil)
-      Ingredient.ui.warn "A mix was called"
+    def taste(&block)
+      Ingredient.ui.warn "A taste was called for: " + @name
     end
 
-    def describe(opts = nil)
-      Ingredient.ui.warn "A describe was called"
+    def nom(&block)
+      Ingredient.ui.warn "A nom was called for: " + @name
+    end
+
+    def mix(&block)
+      Ingredient.ui.warn "A mix was called for: " + @name
     end
 
     def env(name)

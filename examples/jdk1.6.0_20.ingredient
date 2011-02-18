@@ -3,16 +3,15 @@
 ##
 
 #
-# Give a basic description of the package this ingredient file configures.
+# Give a basic name and description of the package this ingredient file configures.
 #
-describe 'jdk1.6.0_20' do
-  "java for use on service nodes"
-end
+name        'jdk1.6.0_20'
+description 'java for use on service nodes'
 
 #
 # Operations needed to configure this ingredient into the current environment
 #
-add 'jdk1.6.0_20' do
+add {
   @java_level = 'jdk1.6.0_20'
   @java_curpath = '/opt/java/' + java_level
 
@@ -21,7 +20,7 @@ add 'jdk1.6.0_20' do
 
   ENV['JAVA_PATH'] = java_curpath
   ENV['JAVA_VERSION'] = java_level
-end
+}
 
 #####                                        #####
 ##### Everything past this line is optional. #####
@@ -30,17 +29,17 @@ end
 #
 # Operations needed to remove this ingredient from the current environment.
 #
-remove 'jdk1.6.0_20' do
+remove {
   # remove it from the environment
-end
+}
 
 #
 # Tasting an ingredient is a simple sanity check to see if the configuration was a success.
 #
-taste 'jdk1.6.0_20' do
+taste {
   # Do a simple test to make sure java returns the correct version.
   test_version_java do
-    IO.popen("java -version") do |f|
+    IO.popen('java -version') do |f|
       while line = f.gets do
         assert_true line.include? '1.6.0_20-b02' or line.include? '16.3-b01'
       end
@@ -49,14 +48,14 @@ taste 'jdk1.6.0_20' do
 
   # Do a simple test to make sure javac returns the correct version number
   test_version_javac do
-    assert_true IO.popen("javac -version").gets.include? 'javac 1.6.0_20'
+    assert_true IO.popen('javac -version').gets.include? 'javac 1.6.0_20'
   end
-end
+}
 
 #
 # Noming an ingredient is an extended test meant for regression testing.
 #
-nom 'jdk1.6.0_20' do
+nom {
   test_compile_program do
     require 'tmpdir'
 
@@ -75,10 +74,11 @@ nom 'jdk1.6.0_20' do
     )
 
     File.open(src_filename, 'w') {|f| f.write(program) }
-    IO.popen("javac #{src_filename}");
+    IO.popen('javac #{src_filename}');
 
     assert_true File.exist? class_filename
+    assert_equals `java #{Dir.tmpdir}#{random_name}`, random_name
   end
-end
+}
 
 ## EOF
